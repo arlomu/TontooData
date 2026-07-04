@@ -5,10 +5,12 @@
 mod error;
 mod sandbox;
 mod system_hooks;
+mod query;
 
 pub use error::DataError;
 pub use sandbox::TontooData;
 pub use system_hooks::SystemDataAccess;
+pub use query::{Batch, BatchOp, Model, Migration, Predicate, Relationship, RelationshipKind, SchemaManager, SortDescriptor, Query};
 
 /// Check if running as system app (for Settings app)
 pub fn is_system_app() -> bool {

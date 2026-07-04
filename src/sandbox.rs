@@ -221,6 +221,40 @@ impl TontooData {
         &self.app_id
     }
 
+    /// Get all keys in the database
+    pub fn list_keys(&mut self) -> Result<Vec<String>> {
+        let conn = self.conn.as_ref().ok_or_else(|| DataError::SandboxNotInitialized)?;
+        
+        let mut stmt = conn.prepare("SELECT key FROM kv_store")?;
+        let keys = stmt
+            .query_map([], |row| row.get(0))?
+            .filter_map(|e| e.ok())
+            .collect();
+        
+        Ok(keys)
+    }
+
+    /// Execute batch operations
+    pub fn batch<T: Serialize + for<'de> Deserialize<'de>>(&mut self, ops: &[(&str, Option<T>)]) -> Result<()> {
+        let conn = self.conn.as_ref().ok_or_else(|| DataError::SandboxNotInitialized)?;
+        
+        for (key, data) in ops {
+            match data {
+                Some(value) => {
+                    let serialized = serde_json::to_vec(value)?;
+                    conn.execute(
+                        "INSERT OR REPLACE INTO kv_store (key, value, size) VALUES (?1, ?2, ?3)",
+                        rusqlite::params![key, serialized, serialized.len() as u64],
+                    )?;
+                }
+                None => {
+                    conn.execute("DELETE FROM kv_store WHERE key = ?1", [key])?;
+                }
+            }
+        }
+        Ok(())
+    }
+
     /// Flush database changes to disk
     pub fn flush(&mut self) -> Result<()> {
         if let Some(conn) = &self.conn {
