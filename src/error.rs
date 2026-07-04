@@ -22,4 +22,10 @@ pub enum DataError {
 
     #[error("Invalid app ID: {0}")]
     InvalidAppId(String),
+
+    #[error("SQLite error: {0}")]
+    Sqlite(#[from] rusqlite::Error),
+
+    #[error("Encryption/Decryption failed")]
+    EncryptionFailed,
 }
