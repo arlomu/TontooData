@@ -50,3 +50,11 @@ system.delete_app_data("com.example.myapp")?;
 
 - `TONTOO_APP_ID` - Application identifier for sandboxing
 - `TONTOO_SYSTEM_APP=true` - Enables system management access
+
+## Repository
+
+https://github.com/arlomu/TontooData
+
+## License
+
+MIT
