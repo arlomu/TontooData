@@ -1,0 +1,21 @@
+[package]
+name = "tontoo-data"
+version = "0.1.0"
+edition = "2021"
+authors = ["arlomu"]
+description = "Data storage library for TontooOS with macOS-style sandboxing and system hooks"
+license = "MIT"
+repository = "https://github.com/arlomu/TontooData"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+dirs = "5"
+thiserror = "1"
+walkdir = "2"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+libc = "0.2"
+
+[dev-dependencies]
+tempfile = "3"

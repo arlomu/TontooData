@@ -1,0 +1,48 @@
+# TontooData
+
+Data storage library for TontooOS with macOS-style sandboxing and system hooks.
+
+## Usage
+
+Add to your `Cargo.toml`:
+
+```toml
+[dependencies]
+tontoo-data = { git = "https://github.com/arlomu/TontooData" }
+```
+
+## Features
+
+- **App Sandboxing**: Isolated data storage per application
+- **System Hooks**: Special API for Settings app to manage storage sizes
+- **Cross-platform**: Works on Linux (primary target for TontooOS)
+
+## For Applications
+
+```rust
+use tontoo_data::TontooData;
+
+// Set environment variable: TONTOO_APP_ID=com.example.myapp
+let data = TontooData::init()?;
+data.save("settings", &my_settings)?;
+let settings: Settings = data.load("settings")?.unwrap();
+```
+
+## For System Apps (Settings)
+
+```rust
+use tontoo_data::SystemDataAccess;
+
+// Set environment variable: TONTOO_SYSTEM_APP=true
+let system = SystemDataAccess::init()?;
+let apps = system.list_all_apps()?;
+for app in apps {
+    println!("{}: {} bytes", app.id, app.total_size);
+}
+system.delete_app_data("com.example.myapp")?;
+```
+
+## Environment Variables
+
+- `TONTOO_APP_ID` - Application identifier for sandboxing
+- `TONTOO_SYSTEM_APP=true` - Enables system management access
