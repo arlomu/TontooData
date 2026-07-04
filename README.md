@@ -1,6 +1,10 @@
 # TontooData
 
-Data storage library for TontooOS with macOS-style sandboxing and system hooks.
+Data storage library for TontooOS with sandboxing and system hooks.
+
+## Made for TontooOS
+
+Explore more at https://github.com/arlomu/TontooOSLibs
 
 ## Usage
 
