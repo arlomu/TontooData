@@ -1,6 +1,6 @@
 //! System hooks for Settings app and system management
 
-use crate::{is_system_app, DataError, Result};
+use crate::{is_system_app, Result};
 use serde::Serialize;
 use std::path::PathBuf;
 use walkdir::WalkDir;

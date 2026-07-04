@@ -1,6 +1,6 @@
 //! App sandboxing implementation
 
-use crate::{app_id, DataError, Result};
+use crate::{get_app_id, DataError, Result};
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use walkdir::WalkDir;
@@ -15,9 +15,9 @@ pub struct TontooData {
 impl TontooData {
     /// Initialize data storage for the current app
     /// 
-    /// Uses TONTOO_APP_ID environment variable or provided app_id
+    /// Uses TONTOO_APP_ID environment variable
     pub fn init() -> Result<Self> {
-        Self::with_id(app_id().ok_or(DataError::SandboxNotInitialized)?)
+        Self::with_id(get_app_id().ok_or(DataError::SandboxNotInitialized)?)
     }
 
     /// Initialize with explicit app ID
@@ -143,8 +143,10 @@ impl TontooData {
     fn calculate_dir_size(&self, path: &PathBuf) -> Result<u64> {
         let size = WalkDir::new(path)
             .into_iter()
-            .map(|entry| entry.map(|e| e.metadata().map(|m| m.len() if m.is_file() else 0).unwrap_or(0)))
-            .sum::<u64>();
+            .filter_map(|e| e.ok())
+            .filter_map(|e| e.metadata().ok())
+            .filter(|m| m.is_file())
+            .fold(0, |acc, m| acc + m.len());
         Ok(size)
     }
 }

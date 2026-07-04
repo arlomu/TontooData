@@ -16,14 +16,9 @@ pub fn is_system_app() -> bool {
 }
 
 /// Get the application identifier from environment
-pub fn app_id() -> Option<String> {
+pub fn get_app_id() -> Option<String> {
     std::env::var("TONTOO_APP_ID").ok()
 }
 
 /// Re-export common Result type
 pub type Result<T> = std::result::Result<T, DataError>;
-
-/// Get the application identifier from environment
-pub fn app_id() -> Option<String> {
-    std::env::var("TONTOO_APP_ID").ok()
-}
