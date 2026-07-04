@@ -17,9 +17,45 @@ pub fn is_system_app() -> bool {
     std::env::var("TONTOO_SYSTEM_APP").unwrap_or_default() == "true"
 }
 
-/// Get the application identifier from environment
+/// Read the app id from `Tontoo.proj`.
+/// We walk up from the current executable to find `Tontoo.proj`,
+/// then parse the `<Id>` tag from the XML.
 pub fn get_app_id() -> Option<String> {
-    std::env::var("TONTOO_APP_ID").ok()
+    let exe = std::env::current_exe().ok()?;
+    let mut dir = exe.parent()?;
+
+    loop {
+        let candidate = dir.join("Tontoo.proj");
+        if candidate.exists() {
+            let content = std::fs::read_to_string(candidate).ok()?;
+            return parse_app_id_from_proj(&content);
+        }
+
+        if dir.parent() == Some(dir.clone()) {
+            break;
+        }
+        dir = dir.parent()?;
+    }
+
+    None
+}
+
+fn parse_app_id_from_proj(xml: &str) -> Option<String> {
+    let doc = quick_xml::de::from_str::<TontooProj>(xml).ok()?;
+    Some(doc.app_info.id)
+}
+
+#[derive(Debug, serde::Deserialize)]
+#[serde(rename = "TontooProject")]
+struct TontooProj {
+    #[serde(rename = "AppInfo")]
+    app_info: AppInfoXml,
+}
+
+#[derive(Debug, serde::Deserialize)]
+struct AppInfoXml {
+    #[serde(rename = "Id")]
+    id: String,
 }
 
 /// Re-export common Result type

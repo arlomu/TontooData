@@ -29,8 +29,7 @@ impl SystemDataAccess {
 
         let apps_root = dirs::data_local_dir()
             .unwrap_or_else(|| PathBuf::from("."))
-            .join("TontooOS")
-            .join("Apps");
+            .join("tapps");
 
         let cache_base = dirs::cache_dir()
             .unwrap_or_else(|| PathBuf::from("."))

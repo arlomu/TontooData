@@ -33,8 +33,7 @@ impl TontooData {
 
         let db_path = dirs::data_local_dir()
             .unwrap_or_else(|| PathBuf::from("."))
-            .join("TontooOS")
-            .join("Apps")
+            .join("tapps")
             .join(&app_id)
             .join("data.db");
 
