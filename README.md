@@ -15,9 +15,18 @@ Add to your `Cargo.toml`:
 tontoo-data = { git = "https://github.com/arlomu/TontooData" }
 ```
 
+For encryption support:
+
+```toml
+[dependencies]
+tontoo-data = { git = "https://github.com/arlomu/TontooData", features = ["encryption"] }
+```
+
 ## Features
 
-- **App Sandboxing**: Isolated data storage per application
+- **SQLite Backend**: Efficient key-value storage with lazy loading
+- **App Sandboxing**: Isolated per application (separate database per app)
+- **Optional Encryption**: AES-256-GCM when `encryption` feature is enabled
 - **System Hooks**: Special API for Settings app to manage storage sizes
 - **Cross-platform**: Works on Linux (primary target for TontooOS)
 
